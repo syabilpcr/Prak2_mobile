@@ -29,7 +29,7 @@
         app:title="Pertemuan 7"
         app:titleTextColor="@color/white" />
 
-    <TextView
+     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
