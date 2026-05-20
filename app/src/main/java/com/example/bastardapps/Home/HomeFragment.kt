@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.edit
 import com.example.bastardapps.AuthActivity
+import com.example.bastardapps.Home.pertemuan_10.TenthActivity
 import com.example.bastardapps.Home.pertemuan_2.SecondActivity
 import com.example.bastardapps.Home.pertemuan_3.ThirdActivity
 import com.example.bastardapps.Home.pertemuan_4.FourthActivity
@@ -62,6 +63,9 @@ class HomeFragment : Fragment() {
 
         binding.btnPertemuan9.setOnClickListener {
             startActivity(Intent(requireContext(), NinthActivity::class.java))
+        }
+        binding.btnPertemuan10.setOnClickListener {
+            startActivity(Intent(requireContext(), TenthActivity::class.java))
         }
 
         // Fitur Logout
