@@ -61,6 +61,7 @@ class MoreFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)

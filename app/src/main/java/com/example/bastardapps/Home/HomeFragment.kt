@@ -12,7 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bastardapps.AuthActivity
+import com.example.bastardapps.Data.Api.PhotoApiClient
+import com.example.bastardapps.Home.Photo.PhotoAdapter
 import com.example.bastardapps.Home.pertemuan_10.TenthActivity
 import com.example.bastardapps.Home.pertemuan_2.SecondActivity
 import com.example.bastardapps.Home.pertemuan_3.ThirdActivity
@@ -22,6 +26,7 @@ import com.example.bastardapps.Home.pertemuan_9.NinthActivity
 import com.example.bastardapps.R
 import com.example.bastardapps.databinding.FragmentHomeBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 import kotlin.jvm.java
 
 class HomeFragment : Fragment() {
@@ -91,6 +96,30 @@ class HomeFragment : Fragment() {
                     Log.e("Info Dialog","Anda memilih Tidak!")
                 }
                 .show()
+        }
+
+        loadPhoto()
+    }
+
+    private fun loadPhoto() {
+        lifecycleScope.launch {
+            try {
+                val photos = PhotoApiClient.apiService.getPhotos()
+                val adapter = PhotoAdapter(photos)
+                binding.rvGallery.adapter = adapter
+
+                /** List Tampil Vertical*/
+                binding.rvGallery.layoutManager = LinearLayoutManager(requireContext())
+
+                /** List Tampil Horizontal */
+                //binding.rvGallery.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+                /** List Tampil Grid */
+                //binding.rvGallery.layoutManager = GridLayoutManager(requireContext(),2)
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Gagal memuat gambar", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
