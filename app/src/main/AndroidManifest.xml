@@ -13,8 +13,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BastardApps">
+
+        <!-- LAUNCHER: SplashScreen dulu, baru cek onboarding/login -->
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".OnBoarding.OnBoardingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".Message.tutorial.TutorialMessageActivity"
@@ -26,13 +46,7 @@
             android:name=".Home.pertemuan_9.NinthActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreenActivity"
-            android:exported="false" />
-        <activity
             android:name=".Home.pertemuan_7.SeventhActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AuthActivity"
             android:exported="false" />
         <activity
             android:name=".Home.pertemuan_4.FourthActivity"
@@ -43,18 +57,6 @@
         <activity
             android:name=".Home.pertemuan_2.SecondActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BaseActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
