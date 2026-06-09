@@ -3,16 +3,13 @@ package com.example.bastardapps.Data.Model
 import com.google.gson.annotations.SerializedName
 
 data class NewsResponse(
-    @SerializedName("articles") val articles: List<NewsArticle>
+    @SerializedName("posts") val articles: List<NewsArticle>
 )
 
 data class NewsArticle(
-    @SerializedName("title")       val title: String?,
-    @SerializedName("description") val description: String?,
-    @SerializedName("urlToImage")  val urlToImage: String?,
-    @SerializedName("url")         val url: String?,
-    @SerializedName("publishedAt") val publishedAt: String?,
-    @SerializedName("source")      val source: NewsSource?
+    @SerializedName("title")  val title: String?,
+    @SerializedName("body")   val description: String?,
+    @SerializedName("tags")   val tags: List<String>?
 )
 
 data class NewsSource(
