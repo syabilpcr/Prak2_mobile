@@ -10,12 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bastardapps.AuthActivity
+import com.example.bastardapps.Data.Api.NewsApiClient
 import com.example.bastardapps.Data.Api.PhotoApiClient
+import com.example.bastardapps.Home.News.NewsAdapter
 import com.example.bastardapps.Home.Photo.PhotoAdapter
 import com.example.bastardapps.Home.pertemuan_10.TenthActivity
 import com.example.bastardapps.Home.pertemuan_2.SecondActivity
@@ -27,7 +28,6 @@ import com.example.bastardapps.R
 import com.example.bastardapps.databinding.FragmentHomeBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
-import kotlin.jvm.java
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -37,7 +37,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -51,21 +50,17 @@ class HomeFragment : Fragment() {
         val sharedPref = requireContext().getSharedPreferences("session_user", MODE_PRIVATE)
 
         binding.btnPertemuan2.setOnClickListener {
-            startActivity(Intent(requireContext(),SecondActivity::class.java ))
+            startActivity(Intent(requireContext(), SecondActivity::class.java))
         }
-
         binding.btnPertemuan3.setOnClickListener {
             startActivity(Intent(requireContext(), ThirdActivity::class.java))
         }
-
         binding.btnPertemuan4.setOnClickListener {
             startActivity(Intent(requireContext(), FourthActivity::class.java))
         }
-
         binding.btnPertemuan7.setOnClickListener {
             startActivity(Intent(requireContext(), SeventhActivity::class.java))
         }
-
         binding.btnPertemuan9.setOnClickListener {
             startActivity(Intent(requireContext(), NinthActivity::class.java))
         }
@@ -74,31 +69,30 @@ class HomeFragment : Fragment() {
         }
 
         // Fitur Logout
-        binding.btnLogout.setOnClickListener { //pakai binding untuk lebih mempermudah pemanggilan id
+        binding.btnLogout.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Logout")
                 .setMessage("Apakah Anda yakin ingin Logout?")
                 .setPositiveButton("Ya") { dialog, _ ->
-                    sharedPref.edit {
-                        clear()
-                    }
+                    sharedPref.edit { clear() }
                     dialog.dismiss()
-
                     val intent = Intent(requireContext(), AuthActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
-
-                    dialog.dismiss()
-                    Log.e("Info Dialog","Anda memilih Ya!")
+                    Log.e("Info Dialog", "Anda memilih Ya!")
                 }
                 .setNegativeButton("Batal") { dialog, _ ->
                     dialog.dismiss()
-                    Log.e("Info Dialog","Anda memilih Tidak!")
+                    Log.e("Info Dialog", "Anda memilih Tidak!")
                 }
                 .show()
         }
 
+        // Load foto dari API (sudah ada sebelumnya)
         loadPhoto()
+
+        // Load berita dari API Public (BARU)
+        loadNews()
     }
 
     private fun loadPhoto() {
@@ -107,19 +101,32 @@ class HomeFragment : Fragment() {
                 val photos = PhotoApiClient.apiService.getPhotos()
                 val adapter = PhotoAdapter(photos)
                 binding.rvGallery.adapter = adapter
-
-                /** List Tampil Vertical*/
                 binding.rvGallery.layoutManager = LinearLayoutManager(requireContext())
-
-                /** List Tampil Horizontal */
-                //binding.rvGallery.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-                /** List Tampil Grid */
-                //binding.rvGallery.layoutManager = GridLayoutManager(requireContext(),2)
-
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Gagal memuat gambar", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // =============================================
+    // FUNGSI BARU: Load berita dari API Public
+    // =============================================
+
+    private fun loadNews() {
+        lifecycleScope.launch {
+            try {
+                val response = NewsApiClient.apiService.getTopHeadlines()
+                val adapter = NewsAdapter(response.articles)
+                binding.rvNews.adapter = adapter
+                binding.rvNews.layoutManager = LinearLayoutManager(requireContext())
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Gagal memuat berita: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

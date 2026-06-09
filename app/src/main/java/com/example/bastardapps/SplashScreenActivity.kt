@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.bastardapps.OnBoarding.OnBoardingActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,22 +22,25 @@ class SplashScreenActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         val sharedPref = getSharedPreferences("session_user", MODE_PRIVATE)
 
-        //Kondisi jika isLogin bernilai true
-        val isLogin = sharedPref.getBoolean("isLogin", false)
-        if (isLogin) {
-            //Panggil Intent untuk ke MainActivity
-            val intent = Intent (this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
         lifecycleScope.launch {
-            delay(2000) //simulasi pengambilan data selama 2 detik
+            delay(2000) // Simulasi loading selama 2 detik
 
-            var intent = Intent(this@SplashScreenActivity, AuthActivity::class.java)
-            startActivity(intent)
-            finish()
+            val isOnboardingDone = sharedPref.getBoolean("onboarding_done", false)
+            val isLogin = sharedPref.getBoolean("isLogin", false)
+
+            lifecycleScope.launch {
+                delay(2000)
+                val intent = when {
+                    isLogin -> Intent(this@SplashScreenActivity, BaseActivity::class.java)
+                    isOnboardingDone -> Intent(this@SplashScreenActivity, AuthActivity::class.java)
+                    else -> Intent(this@SplashScreenActivity, OnBoardingActivity::class.java)
+                }
+                startActivity(intent)
+                finish()
+            }
         }
     }
 }
